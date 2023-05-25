@@ -72,16 +72,27 @@ public class Viewer {
                       int easyQuestions) throws IOException {
     output.append("No more questions left to answer!");
     output.append("\n");
-    output.append("You answered " + totalQuestions + " questions.");
+    output.append("You answered ").append(String.valueOf(totalQuestions)).append(" questions.");
     output.append("\n");
-    output.append(easyToHard + " questions went from easy to hard.");
+    output.append(String.valueOf(easyToHard)).append(" questions went from easy to hard.");
     output.append("\n");
-    output.append(hardToEasy + " questions went from hard to easy.");
+    output.append(String.valueOf(hardToEasy)).append(" questions went from hard to easy.");
     output.append("\n");
     output.append("Current Counts in Question Bank: ");
     output.append("\n");
-    output.append(hardQuestions + " Hard Questions");
+    output.append(String.valueOf(hardQuestions)).append(" Hard Questions");
     output.append("\n");
-    output.append(easyQuestions + " Easy Questions");
+    output.append(String.valueOf(easyQuestions)).append(" Easy Questions");
+  }
+
+  /**
+   * Outputs a message to the console if the input in invalid
+   *
+   * @throws IOException Throws if an error occurs
+   */
+  public void incorrectOutput() throws IOException {
+    output.append("You made a typo.").append(System.lineSeparator())
+        .append("Please type hard, easy or show answer and press enter to continue.")
+        .append(System.lineSeparator());
   }
 }

@@ -4,9 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import cs3500.pa02.model.Question;
 import cs3500.pa02.viewer.Viewer;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.PrintStream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -132,5 +130,21 @@ class ViewerTest {
             System.lineSeparator()
             +
             "5 Easy Questions", output.toString());
+  }
+
+  /**
+   * Checks that the correct thing is outputted to the console when the input is invalid
+   *
+   * @throws IOException Throws if an error occurs
+   */
+  @Test
+  void incorrectOutput() throws IOException {
+    viewer.incorrectOutput();
+
+    assertEquals("You made a typo." + System.lineSeparator()
+        +
+        "Please type hard, easy or show answer and press enter to continue."
+        +
+        System.lineSeparator(), output.toString());
   }
 }

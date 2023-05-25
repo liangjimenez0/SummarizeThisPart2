@@ -1,20 +1,17 @@
 package cs3500.pa02;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import cs3500.pa02.controller.SrFile;
 import cs3500.pa02.model.ListOfQuestions;
 import cs3500.pa02.model.Question;
+import cs3500.pa02.model.WriteFile;
+import java.io.File;
 import java.util.ArrayList;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-/**
- * To test the SrFile class and respective methods
- */
-class SrFileTest {
-
+class WriteFileTest {
   String samplePath;
   String invalidPath;
   SrFile file;
@@ -60,39 +57,17 @@ class SrFileTest {
   }
 
   /**
-   * Tests that the processQuestions method creates an array list of questions
-   * based on a file
+   * Checks that the rewriteFile method rewrites a new question sr file
+   * with updated levels and deletes the old file
    */
   @Test
-  void processQuestions() {
-    assertEquals(listOfQuestions, file.processQuestions(samplePath));
-    assertEquals(6, file.processQuestions(samplePath).size());
-    assertThrows(RuntimeException.class, () -> file.processQuestions("invalid"));
-  }
+  void rewriteFile() {
+    WriteFile file = new WriteFile();
 
-  /**
-   * Checks that the chooseQuestions method randomly selects an indicated
-   * number of questions from a given list of questions
-   */
-  @Test
-  void chooseQuestions() {
-    assertEquals(2, file.chooseQuestions("2", loQuestions).size());
-    assertEquals(6, file.chooseQuestions("10", loQuestions).size());
-  }
+    file.rewriteFile(loQuestions, samplePath);
 
-  /**
-   * Checks that the remainderQuestions outputs the questions not
-   * randomly chosen
-   */
-  @Test
-  void remainderQuestions() {
-    ListOfQuestions loQuestions2 = new ListOfQuestions(file.processQuestions(samplePath));
+    File newFile = new File(samplePath);
 
-    loQuestions2.getQuestions().remove(0);
-
-    ArrayList<Question> newList = new ArrayList<>();
-    newList.add(question1);
-
-    assertEquals(newList, file.remainderQuestions(loQuestions2, loQuestions));
+    assertTrue(newFile.exists());
   }
 }

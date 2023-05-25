@@ -2,18 +2,15 @@ package cs3500.pa02.controller;
 
 import cs3500.pa02.model.ListOfQuestions;
 import cs3500.pa02.model.Question;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 
 /**
  * Represents a SrFile class that is responsible for working with
- * the user input in relation to reading and writing the files
+ * the user input in relation to reading the files
  */
 public class SrFile {
 
@@ -70,26 +67,28 @@ public class SrFile {
     Random rand = new Random();
     int size = Integer.parseInt(amount);
     ArrayList<Question> randomQuestion = new ArrayList<>();
-    ArrayList<Question> allQuestionsCopy = new ArrayList<>(allQuestions.getQuestions());
+    ListOfQuestions allQuestionsCopy =
+        new ListOfQuestions(new ArrayList<>(allQuestions.getQuestions()));
 
     if (size > allQuestions.getQuestions().size()) {
       randomQuestion.addAll(allQuestions.getQuestions());
     } else {
-      for (int i = 0; i < size; i++) {
-        int index = rand.nextInt(allQuestionsCopy.size() - 1);
-        Question currentQuestion = allQuestionsCopy.get(index);
+      while (randomQuestion.size() < size && !allQuestionsCopy.hasNoHard()
+          && !(size > allQuestions.getQuestions().size())) {
+        int index = rand.nextInt(allQuestionsCopy.getQuestions().size() - 1);
+        Question currentQuestion = allQuestionsCopy.getQuestions().get(index);
 
         if (currentQuestion.getHard()) {
           randomQuestion.add(currentQuestion);
-          allQuestionsCopy.remove(index);
+          allQuestionsCopy.getQuestions().remove(index);
         }
       }
     }
 
     while (randomQuestion.size() < size && !(size > allQuestions.getQuestions().size())) {
-      int index = rand.nextInt(allQuestionsCopy.size() - 1);
-      randomQuestion.add(allQuestionsCopy.get(index));
-      allQuestionsCopy.remove(index);
+      int index = rand.nextInt(allQuestionsCopy.getQuestions().size() - 1);
+      randomQuestion.add(allQuestionsCopy.getQuestions().get(index));
+      allQuestionsCopy.getQuestions().remove(index);
     }
 
     return randomQuestion;
@@ -117,40 +116,4 @@ public class SrFile {
     return remainders;
   }
 
-  /**
-   * Rewrites the question file to include the new hard and easy values
-   * and deletes the old file
-   *
-   * @param allQuestions A list of all the questions
-   * @param srPath       The string of the file path of the original file
-   */
-  public void rewriteFile(ListOfQuestions allQuestions, String srPath) {
-    try {
-      StringBuilder builder = new StringBuilder();
-
-      for (Question q : allQuestions.getQuestions()) {
-        builder.append(q.getQuestion()).append(":::").append(q.getAnswer())
-            .append(System.lineSeparator()).append(q.determineLevel())
-            .append(System.lineSeparator());
-      }
-
-      File placeHolder = new File("placeHolder.sr");
-      File oldFile = new File(srPath);
-      Scanner input = new Scanner(builder.toString());
-      BufferedWriter writer = new BufferedWriter(new FileWriter(placeHolder));
-
-      while (input.hasNextLine()) {
-        String line = input.nextLine();
-
-        writer.write(line + System.lineSeparator());
-      }
-
-      writer.close();
-      boolean deleted = oldFile.delete();
-      boolean renamed = placeHolder.renameTo(oldFile);
-
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-  }
 }

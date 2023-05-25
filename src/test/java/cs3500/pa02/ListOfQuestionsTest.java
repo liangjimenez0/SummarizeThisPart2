@@ -1,6 +1,8 @@
 package cs3500.pa02;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import cs3500.pa02.model.ListOfQuestions;
 import cs3500.pa02.model.Question;
@@ -46,16 +48,6 @@ class ListOfQuestionsTest {
   }
 
   /**
-   * Checks that the hardOrEasyCount can count the hard or easy questions
-   * of a list of questions that changed during the study session
-   */
-  @Test
-  void hardOrEasyCount() {
-    assertEquals(0, questions.hardOrEasyCount(0, 3));
-    assertEquals(3, questions.hardOrEasyCount(3, 0));
-  }
-
-  /**
    * Tests that the countHardQuestions method counts the hard questions of a list of questions
    */
   @Test
@@ -77,5 +69,20 @@ class ListOfQuestionsTest {
     question1.changeEasy();
 
     assertEquals(1, questions.countEasyQuestions());
+  }
+
+  /**
+   * Tests that the hasNoHard method changes its boolean value
+   * based on whether there are any hard questions in a list of questions
+   */
+  @Test
+  void hasNoHard() {
+    assertFalse(questions.hasNoHard());
+
+    questions.getQuestions().get(0).changeEasy();
+    questions.getQuestions().get(1).changeEasy();
+    questions.getQuestions().get(2).changeEasy();
+
+    assertTrue(questions.hasNoHard());
   }
 }

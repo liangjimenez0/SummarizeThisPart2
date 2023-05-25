@@ -3,7 +3,10 @@ package cs3500;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.io.IOException;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import org.junit.jupiter.api.Test;
@@ -15,11 +18,9 @@ import org.junit.jupiter.api.Test;
 class DriverTest {
   /**
    * Tests the main method for a created order flag
-   *
-   * @throws IOException Throws when an I/O error occurs
    */
   @Test
-  void setUpCreated() throws IOException {
+  void setUpCreated() {
     String[] args1 = {"src/test", "CREATED", "src/test/study-guide"};
 
     Driver.main(args1);
@@ -28,11 +29,9 @@ class DriverTest {
 
   /**
    * Tests the main method for a modified order flag
-   *
-   * @throws IOException Throws when an I/O error occurs
    */
   @Test
-  void setUpModified() throws IOException {
+  void setUpModified() {
     String[] args2 = {"src/test", "MODIFIED", "src/test/study-guide2"};
 
     Driver.main(args2);
@@ -41,11 +40,9 @@ class DriverTest {
 
   /**
    * Tests the main method for a file name order flag
-   *
-   * @throws IOException Throws when an I/O error occurs
    */
   @Test
-  void setUpName() throws IOException {
+  void setUpName() {
     String[] args3 = {"src/test", "FILENAME", "src/test/study-guide3"};
 
     Driver.main(args3);
@@ -64,9 +61,51 @@ class DriverTest {
   /**
    * Tests the main method when there are no arguments given
    */
+  @Test
   void noArguments() {
+
+    String input =
+        "Questions.sr"
+            +
+            System.lineSeparator()
+            +
+            "4"
+            +
+            System.lineSeparator()
+            +
+            "easy"
+            +
+            System.lineSeparator()
+            +
+            "hard"
+            +
+            System.lineSeparator()
+            +
+            "show answer"
+            +
+            System.lineSeparator()
+            +
+            "easy"
+            +
+            "invalid"
+            +
+            System.lineSeparator()
+            +
+            "easy";
+    InputStream inputStream = new ByteArrayInputStream(input.getBytes());
+    System.setIn(inputStream);
+    ByteArrayOutputStream output = new ByteArrayOutputStream();
+    System.setOut(new PrintStream(output));
+    String welcomePage =
+        "Choose a SR Question Bank File and Press Enter: \n";
+    final String instructions = "Type easy, hard, or show answer and press enter\n";
+    final String endPage = "You answered 4 questions.\n";
+
     Driver.main(new String[0]);
 
-    assertTrue(Files.exists(Path.of("src/test/java.sr")));
+    assertTrue(Files.exists(Path.of("Questions.sr")));
+    assertTrue(output.toString().contains(welcomePage));
+    assertTrue(output.toString().contains(instructions));
+    assertTrue(output.toString().contains(endPage));
   }
 }

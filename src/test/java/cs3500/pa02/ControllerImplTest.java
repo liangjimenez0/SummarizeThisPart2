@@ -26,7 +26,7 @@ class ControllerImplTest {
             +
             System.lineSeparator()
             +
-            "2"
+            "4"
             +
             System.lineSeparator()
             +
@@ -34,14 +34,28 @@ class ControllerImplTest {
             +
             System.lineSeparator()
             +
-            "hard";
+            "hard"
+            +
+            System.lineSeparator()
+            +
+            "show answer"
+            +
+            System.lineSeparator()
+            +
+            "easy"
+            +
+            "invalid"
+            +
+            System.lineSeparator()
+            +
+            "easy";
     Readable input = new StringReader(string);
     Appendable output = new StringBuilder();
     Controller controller = new ControllerImpl(input, output);
     String welcomePage =
         "Choose a SR Question Bank File and Press Enter: \n";
     final String instructions = "Type easy, hard, or show answer and press enter\n";
-    final String endPage = "You answered 2 questions.\n";
+    final String endPage = "You answered 4 questions.\n";
 
     assertEquals("", output.toString());
     controller.run();

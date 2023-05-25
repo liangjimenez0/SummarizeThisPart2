@@ -147,6 +147,6 @@ class QuestionTest {
     question1.changeEasy();
     assertNotEquals(question1, new Question("What is the rarest blood type?", "AB-Negative"));
 
-    assertFalse(question1.equals("Invalid"));
+    assertNotEquals("Invalid", question1);
   }
 }

@@ -2,6 +2,7 @@ package cs3500.pa02.controller;
 
 import cs3500.pa02.model.ListOfQuestions;
 import cs3500.pa02.model.Question;
+import cs3500.pa02.model.WriteFile;
 import cs3500.pa02.viewer.Viewer;
 import java.io.IOException;
 import java.util.Objects;
@@ -41,11 +42,7 @@ public class ControllerImpl implements Controller {
     String filePath = scanner.nextLine();
     SrFile file = new SrFile();
     ListOfQuestions allQuestions = new ListOfQuestions(file.processQuestions(filePath));
-    int originalHardQuestions = allQuestions.countHardQuestions();
-    int originalEasyQuestions = allQuestions.countEasyQuestions();
-
     viewer.numberOfQuestions();
-
     String numberOfQuestions = scanner.nextLine();
     ListOfQuestions randomQuestions =
         new ListOfQuestions(file.chooseQuestions(numberOfQuestions, allQuestions));
@@ -53,15 +50,19 @@ public class ControllerImpl implements Controller {
     for (Question q : randomQuestions.getQuestions()) {
       viewer.outputQuestion(q);
       String nextMove = scanner.nextLine();
-      q.processAnswer(nextMove);
 
-      if (nextMove.equalsIgnoreCase("show answer")) {
+      if (nextMove.equalsIgnoreCase("hard") || nextMove.equalsIgnoreCase("easy")) {
+        q.processAnswer(nextMove);
+      } else if (nextMove.equalsIgnoreCase("show answer")) {
         viewer.outputAnswer(q);
         String easyOrHard = scanner.nextLine();
         q.processAnswer(easyOrHard);
+      } else {
+        viewer.incorrectOutput();
+        String difficulty = scanner.nextLine();
+        q.processAnswer(difficulty);
       }
     }
-
     ListOfQuestions remainderQuestions =
         new ListOfQuestions(file.remainderQuestions(randomQuestions, allQuestions));
     int questionCount = randomQuestions.getQuestions().size();
@@ -71,10 +72,10 @@ public class ControllerImpl implements Controller {
     int newEasyQuestions = randomQuestions.countEasyQuestions()
         +
         remainderQuestions.countEasyQuestions();
-    int easyToHard = randomQuestions.hardOrEasyCount(originalEasyQuestions, newEasyQuestions);
-    int hardToEasy = randomQuestions.hardOrEasyCount(originalHardQuestions, newHardQuestions);
 
-    file.rewriteFile(allQuestions, filePath);
-    viewer.showEnd(questionCount, easyToHard, hardToEasy, newHardQuestions, newEasyQuestions);
+    WriteFile fileWrite = new WriteFile();
+    fileWrite.rewriteFile(allQuestions, filePath);
+    viewer.showEnd(questionCount, randomQuestions.countEasyQuestions(),
+        randomQuestions.countHardQuestions(), newHardQuestions, newEasyQuestions);
   }
 }

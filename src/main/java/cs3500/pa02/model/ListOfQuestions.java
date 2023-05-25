@@ -28,20 +28,6 @@ public class ListOfQuestions {
   }
 
   /**
-   * Determines the number of questions that went from either hard to easy
-   * or easy to hard during a study session
-   *
-   * @param startingCount The number of questions that were hard or easy at the start of the session
-   * @param endingCount   The number of questions that were hard or easy at the end of the session
-   * @return the number of questions that went from either hard to easy or
-   *         easy to hard during a study session
-   */
-  public int hardOrEasyCount(int startingCount, int endingCount) {
-
-    return Math.max(startingCount - endingCount, 0);
-  }
-
-  /**
    * Counts the number of hard questions in a ListOfQuestions
    *
    * @return The number of hard questions in a ListOfQuestions
@@ -51,7 +37,7 @@ public class ListOfQuestions {
     int totalHard = 0;
 
     for (Question q : this.questions) {
-      if (q.getHard()) {
+      if (q.getHard() && !q.getEasy()) {
         totalHard++;
       }
     }
@@ -70,7 +56,7 @@ public class ListOfQuestions {
     int totalEasy = 0;
 
     for (Question q : this.questions) {
-      if (q.getEasy()) {
+      if (q.getEasy() && !q.getHard()) {
         totalEasy++;
       }
     }
@@ -78,4 +64,23 @@ public class ListOfQuestions {
     return totalEasy;
   }
 
+  /**
+   * Determines if a ListOfQuestions has any questions
+   * with the difficulty level of hard
+   *
+   * @return A boolean value
+   */
+  public boolean hasNoHard() {
+
+    boolean hasNoHard = true;
+
+    for (Question q : this.questions) {
+      if (q.getHard()) {
+        hasNoHard = false;
+        break;
+      }
+    }
+
+    return hasNoHard;
+  }
 }
